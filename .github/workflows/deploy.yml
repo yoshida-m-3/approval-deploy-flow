@@ -7,6 +7,12 @@ on:
       - main
 
 jobs:
+  setup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3.0.0
+      - run: echo 'Setup job started'
   deploy:
     environment:
       name: Production
