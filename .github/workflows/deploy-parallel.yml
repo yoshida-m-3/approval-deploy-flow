@@ -1,0 +1,53 @@
+name: "Parallel Execution Demo"
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  # これらの3つのジョブは同時に開始され、並列で実行される
+  
+  job-a:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Job A - Start
+        run: |
+          echo "Job A started at $(date +%T)"
+          sleep 5
+          echo "Job A finished at $(date +%T)"
+
+  job-b:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Job B - Start
+        run: |
+          echo "Job B started at $(date +%T)"
+          sleep 5
+          echo "Job B finished at $(date +%T)"
+
+  job-c:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Job C - Start
+        run: |
+          echo "Job C started at $(date +%T)"
+          sleep 5
+          echo "Job C finished at $(date +%T)"
+
+  # すべてのジョブの完了を待って実行
+  summary:
+    runs-on: ubuntu-latest
+    needs: [job-a, job-b, job-c]
+    if: always()
+    steps:
+      - name: Summary
+        run: |
+          echo "===================="
+          echo "並列実行の結果:"
+          echo "Job A: ${{ needs.job-a.result }}"
+          echo "Job B: ${{ needs.job-b.result }}"
+          echo "Job C: ${{ needs.job-c.result }}"
+          echo "===================="
+          echo "3つのジョブが同時に実行されたため、約5秒で完了"

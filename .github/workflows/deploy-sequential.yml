@@ -1,0 +1,52 @@
+name: "Sequential Execution Demo"
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  # これらのジョブは順番に実行される（前のジョブが完了してから次が開始）
+  
+  job-a:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Job A - Start
+        run: |
+          echo "Job A started at $(date +%T)"
+          sleep 5
+          echo "Job A finished at $(date +%T)"
+
+  job-b:
+    runs-on: ubuntu-latest
+    needs: job-a  # Job Aの完了を待つ
+    steps:
+      - name: Job B - Start
+        run: |
+          echo "Job B started at $(date +%T)"
+          sleep 5
+          echo "Job B finished at $(date +%T)"
+
+  job-c:
+    runs-on: ubuntu-latest
+    needs: job-b  # Job Bの完了を待つ
+    steps:
+      - name: Job C - Start
+        run: |
+          echo "Job C started at $(date +%T)"
+          sleep 5
+          echo "Job C finished at $(date +%T)"
+
+  summary:
+    runs-on: ubuntu-latest
+    needs: job-c  # Job Cの完了を待つ
+    if: always()
+    steps:
+      - name: Summary
+        run: |
+          echo "===================="
+          echo "直列実行の結果:"
+          echo "Job A → Job B → Job C の順に実行"
+          echo "===================="
+          echo "各ジョブが順番に実行されたため、約15秒で完了"
