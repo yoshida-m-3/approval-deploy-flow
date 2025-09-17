@@ -20,6 +20,8 @@ jobs:
 
   job-b:
     runs-on: ubuntu-latest
+    environment:
+      name: Production
     steps:
       - name: Job B - Start
         run: |
