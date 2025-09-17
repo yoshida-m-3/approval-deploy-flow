@@ -2,14 +2,14 @@ name: "Deploy - Combined Example"
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
+  # push:
+  #   branches:
+  #     - main
 
 jobs:
   # 並列実行セクション: これらのジョブは同時に開始される
   # ============================================
-  
+
   # 並列ジョブ1: セットアップ
   setup:
     runs-on: ubuntu-latest
@@ -44,11 +44,11 @@ jobs:
 
   # 直列実行セクション: 以下のジョブは順番に実行される
   # ============================================
-  
+
   # 直列ステップ1: ビルド（並列ジョブ完了後）
   build:
     runs-on: ubuntu-latest
-    needs: [setup, lint, security]  # これらのジョブすべての完了を待つ
+    needs: [setup, lint, security] # これらのジョブすべての完了を待つ
     steps:
       - uses: actions/checkout@v3.0.0
       - run: |
@@ -59,7 +59,7 @@ jobs:
   # 直列ステップ2: テスト（ビルド完了後）
   test:
     runs-on: ubuntu-latest
-    needs: build  # buildの完了を待つ
+    needs: build # buildの完了を待つ
     steps:
       - uses: actions/checkout@v3.0.0
       - run: |
@@ -70,7 +70,7 @@ jobs:
   # 直列ステップ3: ステージングデプロイ（テスト完了後）
   deploy-staging:
     runs-on: ubuntu-latest
-    needs: test  # testの完了を待つ
+    needs: test # testの完了を待つ
     environment:
       name: Staging
     steps:
@@ -83,7 +83,7 @@ jobs:
   # 直列ステップ4: 本番デプロイ（ステージング完了後）
   deploy-production:
     runs-on: ubuntu-latest
-    needs: deploy-staging  # deploy-stagingの完了を待つ
+    needs: deploy-staging # deploy-stagingの完了を待つ
     environment:
       name: Production
     steps:
@@ -97,7 +97,8 @@ jobs:
   summary:
     runs-on: ubuntu-latest
     if: always()
-    needs: [setup, lint, security, build, test, deploy-staging, deploy-production]
+    needs:
+      [setup, lint, security, build, test, deploy-staging, deploy-production]
     steps:
       - name: Generate Summary
         run: |

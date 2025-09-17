@@ -2,13 +2,13 @@ name: "Parallel Execution Demo"
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
+  # push:
+  #   branches:
+  #     - main
 
 jobs:
   # これらの3つのジョブは同時に開始され、並列で実行される
-  
+
   job-a:
     runs-on: ubuntu-latest
     steps:

@@ -2,13 +2,13 @@ name: "Sequential Execution Demo"
 
 on:
   workflow_dispatch:
-  push:
-    branches:
-      - main
+  # push:
+  #   branches:
+  #     - main
 
 jobs:
   # これらのジョブは順番に実行される（前のジョブが完了してから次が開始）
-  
+
   job-a:
     runs-on: ubuntu-latest
     steps:
@@ -20,7 +20,7 @@ jobs:
 
   job-b:
     runs-on: ubuntu-latest
-    needs: job-a  # Job Aの完了を待つ
+    needs: job-a # Job Aの完了を待つ
     steps:
       - name: Job B - Start
         run: |
@@ -30,7 +30,7 @@ jobs:
 
   job-c:
     runs-on: ubuntu-latest
-    needs: job-b  # Job Bの完了を待つ
+    needs: job-b # Job Bの完了を待つ
     steps:
       - name: Job C - Start
         run: |
@@ -40,7 +40,7 @@ jobs:
 
   summary:
     runs-on: ubuntu-latest
-    needs: job-c  # Job Cの完了を待つ
+    needs: job-c # Job Cの完了を待つ
     if: always()
     steps:
       - name: Summary
